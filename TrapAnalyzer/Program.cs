@@ -25,9 +25,22 @@ namespace TrapAnalyzer
         /// <returns>The player gear.</returns>
         private static PlayerGear ParseGear(string[] args)
         {
-            // ////////// //
-            // CHANGE ME! //
-            // ////////// //
+
+            {
+                PlayerGear gear = PlayerGear.None;
+                foreach (string arg in args)
+                {
+                    if (arg.Equals("Helmet", StringComparison.OrdinalIgnoreCase))
+                        gear|= PlayerGear.Helmet;
+                    else if (arg.Equals("Shield", StringComparison.OrdinalIgnoreCase))
+                        gear|= PlayerGear.Shield;
+                    else if (arg.Equals("Boots", StringComparison.OrdinalIgnoreCase))
+                        gear|= PlayerGear.Boots;
+                }
+
+                return gear;
+            }
+
         }
 
         /// <summary>
@@ -38,9 +51,28 @@ namespace TrapAnalyzer
         /// <returns>Wether the player survived the trap or not.</returns>
         private static bool CanSurviveTrap(TrapType trap, PlayerGear gear)
         {
-            // ////////// //
-            // CHANGE ME! //
-            // ////////// //
+
+            {
+                switch (trap)
+                {
+                    case TrapType.FallingRocks:
+                        return (gear &(PlayerGear.Helmet|PlayerGear.Boots)) == (PlayerGear.Helmet|PlayerGear.Boots);
+
+                    case TrapType.SpinningBlades:
+                        return (gear &(PlayerGear.Shield|PlayerGear.Boots)) == (PlayerGear.Shield|PlayerGear.Boots);
+
+                    case TrapType.PoisonGas:
+                        return (gear &(PlayerGear.Helmet|PlayerGear.Shield)) == (PlayerGear.Helmet|PlayerGear.Shield);
+
+                    case TrapType.LavaPit:
+                        return (gear &(PlayerGear.Helmet|PlayerGear.Shield|PlayerGear.Boots)) == (PlayerGear.Helmet|PlayerGear.Shield|PlayerGear.Boots);
+
+                    default:
+                        return false;
+                }
+            }
+
+
         }
 
         /// <summary>
@@ -49,9 +81,11 @@ namespace TrapAnalyzer
         /// <param name="trap">The trap the player has fallen into.</param>
         private static void DisplayResult(TrapType trap, bool survives)
         {
-            // ////////// //
-            // CHANGE ME! //
-            // ////////// //
+
+            string result = survives?"survives" : "dies due to";
+            Console.WriteLine($"Player {result} {trap}");
         }
+
     }
 }
+
